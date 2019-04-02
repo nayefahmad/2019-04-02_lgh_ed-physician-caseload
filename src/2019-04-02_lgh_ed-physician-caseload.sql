@@ -9,9 +9,9 @@ JIRA si-2367
 
 
 if object_id('tempdb.dbo.#t1_dr_codes') is not null drop table #t1_dr_codes; 
+if object_id('tempdb.dbo.#t2_records_with_all_docs') is not null drop table #t2_records_with_all_docs; 
 
-
-
+-- pull the codes of the doctors we're interested in: 
 select distinct MostRespProviderName as [name] 
 	, MostRespProviderCode as [code] 
 	--, MostRespProviderService 
@@ -45,7 +45,7 @@ where MostRespProviderName in ('ANDOLFATTO, GARY'
 
 order by MostRespProviderName; 
 
-
+--select * from #t1_dr_codes order by name
 
 
 -- pull all records where the doctors listed above are involved in care (MRP or not): 
@@ -58,18 +58,41 @@ select adr.fiscalyear
 	, dr.DR6DoctorCode
 	, dr.DR7DoctorCode
 	, dr.DR8DoctorCode
-	, count(*)
+	, count(*) as num
+
+into #t2_records_with_all_docs 
 
 from ADRMart.[dbo].[vwAbstractFact] adr
 	inner join ADRMart.[dbo].vwDoctor dr
 		on adr.PAtientID = dr.PatientID
 			and adr.RegisterNumber = dr.RegisterNumber
 
-	inner join #t1_dr_codes t1
-		on adr.MostRespProviderCode = t1.code 
-
 where adr.[FacilityShortName] = 'lgh' 
-	
+	and dr.dr1DoctorCode in ('04751'
+							 , '09654'
+							 , '63012'
+							 , '64216'
+							 , '66587'
+							 , '26650'
+							 , '65834'
+							 , '68459'
+							 , '65437'
+							 , '27508'
+							 , '63961'
+							 , '27079'
+							 , '28516'
+							 , '64478'
+							 , '24950'
+							 , '27866'
+							 , '64754'
+							 , '24077'
+							 , '27957'
+							 , '64789'
+							 , '64265'
+							 , '64418')
+
+
+
 group by adr.FiscalYear
 	, dr.DR1DoctorCode
 	, dr.DR2DoctorCode
@@ -81,3 +104,5 @@ group by adr.FiscalYear
 	, dr.DR8DoctorCode
 
 order by adr.FiscalYear
+
+select * from #t2_records_with_all_docs order by FiscalYear
