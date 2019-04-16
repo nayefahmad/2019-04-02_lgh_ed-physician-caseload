@@ -19,7 +19,7 @@ source(here::here("src",
 
 
 
-# read in ED data data: ------------
+# 1) read in ED data data: ------------
 options(readr.default_locale=readr::locale(tz="America/Los_Angeles"))
 
 df1.ed_data <- 
@@ -34,14 +34,14 @@ df1.ed_data <-
 
 
 
-str(df1.ed_data)
-summary(df1.ed_data)
-head(df1.ed_data)
+# str(df1.ed_data)
+# summary(df1.ed_data)
+# head(df1.ed_data)
 
 
 
 
-# read in list of doctors we are interested in: ----------
+# 2) read in list of doctors we are interested in: ----------
 df2.ed_docs <- 
   read_csv(here::here("results", 
                       "dst", 
@@ -49,10 +49,33 @@ df2.ed_docs <-
   mutate(code = as.character(code))
 
 
-df2.ed_docs
+# df2.ed_docs
 
 
 
 
+
+# 3) map function across rows: ------------
+df3.filtered_by_doc <- 
+  df2.ed_docs %>% 
+  mutate(filtered_data = map(code, 
+                             filter_rows_by_doc, 
+                             df = df1.ed_data))
+
+
+# unnest result: 
+df4.filtered_by_doc_unnested <- 
+  df3.filtered_by_doc %>% 
+  unnest()
+
+
+
+
+# 4) write output: 
+write_csv(df4.filtered_by_doc_unnested,
+          here::here("results", 
+                     "dst", 
+                     "2019-04-16_lgh_cases-grouped-by-trauma-physicians.csv"))
+             
 
 
