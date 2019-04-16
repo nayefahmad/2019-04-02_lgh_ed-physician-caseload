@@ -51,7 +51,8 @@ order by MostRespProviderName;
 
 
 -- pull all records where the doctors listed above are involved in care (MRP or not): 
-select adr.fiscalyear
+select adr.PAtientID
+	, adr.fiscalyear
 	, adr.FacilityShortName
 	, adr.AdmitNursingUnitCode
 	, adr.AdmitNursingUnit
