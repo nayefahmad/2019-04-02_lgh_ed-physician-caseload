@@ -52,14 +52,42 @@ order by MostRespProviderName;
 
 -- pull all records where the doctors listed above are involved in care (MRP or not): 
 select adr.fiscalyear
+	, adr.FacilityShortName
+	, adr.AdmitNursingUnitCode
+	, adr.AdmitNursingUnit
+	, adr.CMGPlusCode
+	, adr.CMGPlusDesc
+	, adr.AdmitDate
+	, adr.DischargeDate
+
 	, dr.DR1DoctorCode
+	, dr.DR1DoctorName
+
 	, dr.DR2DoctorCode
+	, dr.DR2DoctorName
+
 	, dr.DR3DoctorCode
+	, dr.DR3DoctorName
+
 	, dr.DR4DoctorCode
+	, dr.DR4DoctorName
+
 	, dr.DR5DoctorCode
+	, dr.DR5DoctorName
+
 	, dr.DR6DoctorCode
+	, dr.DR6DoctorName
+
 	, dr.DR7DoctorCode
+	, dr.DR7DoctorName
+
 	, dr.DR8DoctorCode
+	, dr.DR8DoctorName
+
+	, [MostRespProviderCode]
+    , [MostRespProviderName]
+
+	
 
 into #t2_records_with_all_docs 
 
@@ -273,9 +301,14 @@ where adr.[FacilityShortName] = 'lgh'
 
 order by adr.FiscalYear
 
--- select * from #t2_records_with_all_docs order by FiscalYear
+/*
+select * 
+from #t2_records_with_all_docs 
+order by FiscalYear
+	, AdmitDate
+	, MostRespProviderName
 
-
+*/
 
 
 
