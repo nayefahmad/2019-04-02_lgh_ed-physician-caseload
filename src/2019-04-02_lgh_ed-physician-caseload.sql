@@ -60,6 +60,8 @@ select adr.PAtientID
 	, adr.CMGPlusDesc
 	, adr.AdmitDate
 	, adr.DischargeDate
+	, adr.Px1Code
+	, adr.Px1Desc
 
 	, dr.DR1DoctorCode
 	, dr.DR1DoctorName
