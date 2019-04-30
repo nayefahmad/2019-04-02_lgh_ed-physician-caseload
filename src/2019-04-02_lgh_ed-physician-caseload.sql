@@ -60,8 +60,12 @@ select adr.PAtientID
 	, adr.CMGPlusDesc
 	, adr.AdmitDate
 	, adr.DischargeDate
+	
+	-- procedures
 	, adr.Px1Code
 	, adr.Px1Desc
+	, px.[Level2Code] as CCI_block_code
+	, px.[Level2Desc] as CCI_block_desc
 
 	, dr.DR1DoctorCode
 	, dr.DR1DoctorName
@@ -97,7 +101,9 @@ into #t2_records_with_all_docs
 from ADRMart.[dbo].[vwAbstractFact] adr
 	inner join ADRMart.[dbo].vwDoctor dr
 		on adr.PAtientID = dr.PatientID
-			and adr.RegisterNumber = dr.RegisterNumber
+		and adr.RegisterNumber = dr.RegisterNumber
+	left join ADRMart.Dim.Px px 
+		on adr.Px1Code = px.PxCode 
 
 where adr.[FacilityShortName] = 'lgh' 
 	and (dr.dr1DoctorCode in ('04751'
